@@ -14,7 +14,7 @@
         
         <h5 class="text-xl font-semibold text-gray-800">👤 Employee Directory</h5>
         
-        <a href="{% url 'create' %}" class="flex items-center space-x-1 py-2 px-4 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition duration-150">
+        <a href="{% url 'employee:create' %}" class="flex items-center space-x-1 py-2 px-4 text-sm font-medium text-white bg-green-600 rounded-lg hover:bg-green-700 transition duration-150">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
             <span>Add New Employee</span>
         </a>
@@ -46,12 +46,12 @@
                     
                     <td class="px-6 py-4 text-center">
                         <div class="flex justify-center gap-2">
-                            <a href="{% url 'edit' emp.pk %}"
+                            <a href="{% url 'employee:edit' emp.pk %}"
                             class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
                                 Edit
                             </a>
 
-                            <form method="POST" action="{% url 'delete' emp.pk %}">
+                            <form method="POST" action="{% url 'employee:delete' emp.pk %}">
                                 {% csrf_token %}
                                 <button type="submit"
                                         onclick="return confirm('Are you sure?')"

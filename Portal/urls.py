@@ -26,6 +26,8 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 
     path('', TemplateView.as_view(template_name='dashboard.html'),name='dashboard'),
-    path("employee",include("employee.urls")),
-    # path("tickets",include("tickets.urls")),
+   path("employee/",include("employee.urls", namespace='employee')), 
+    
+    # Added namespace='tickets' for consistency, assuming you will use it
+    path("tickets/",include("tickets.urls", namespace='tickets')),
 ]

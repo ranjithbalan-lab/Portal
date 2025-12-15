@@ -151,7 +151,7 @@
                             <a 
                                 class="py-2 px-2 text-white bg-custom-orange-dark rounded transition-colors duration-200 flex items-center group relative" 
                                 aria-current="page" 
-                                href="{% url 'home' %}"
+                                href="{% url 'employee:home' %}"
                             >
                                 <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                                 <span class="menu-text">Employee List</span>
@@ -175,7 +175,7 @@
                     
                     <div id="collapseReports" class="hidden">
                         <nav class="flex flex-col space-y-1 py-2">
-                            <a class="py-2 px-2 text-white hover:bg-custom-orange-dark rounded transition-colors duration-200 flex items-center group relative" href="#">
+                            <a class="py-2 px-2 text-white hover:bg-custom-orange-dark rounded transition-colors duration-200 flex items-center group relative" href="{% url 'tickets:home' %}">
                                 <svg class="w-5 h-5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                 <span class="menu-text">Raise a Ticket</span>
                                 <span class="tooltip absolute left-full ml-4 top-1/2 -translate-y-1/2 z-10 p-2 text-xs font-bold bg-gray-700 text-white rounded shadow-lg opacity-0 invisible transition-opacity duration-300 whitespace-nowrap">Raise a Ticket</span>
