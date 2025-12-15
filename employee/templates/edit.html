@@ -1,0 +1,125 @@
+{% extends "dashboard.html"%}
+
+{% block title %}Edit Employee: {{ emp.emp_name }}{% endblock %}
+
+{% block extra_head %}
+    {% endblock %}
+
+{% block content %}
+<div class="w-full p-4 md:p-8 bg-white shadow-xl rounded-lg">
+    
+    <div class="flex items-center justify-between mb-8 border-b pb-4">
+        
+        <a href="{% url 'home' %}" class="flex items-center space-x-1 py-2 px-4 text-sm font-medium text-white bg-gray-500 rounded-lg hover:bg-gray-600 transition duration-150">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> 
+            <span>Back to List</span>
+        </a>
+
+        <h5 class="text-2xl font-bold text-gray-800 flex items-center">
+            <svg class="w-6 h-6 mr-2 text-custom-orange" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+            Edit Employee Record: <span class="ml-2 text-custom-orange">{{ emp.emp_name }}</span>
+        </h5>
+        
+        <div class="w-1/4"></div> 
+    </div>
+
+    <form method="POST" action="{% url 'update' emp.emp_id %}">
+        {% csrf_token %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <div class="flex flex-col">
+                <label for="id_emp_name" class="block text-sm font-medium text-gray-700 mb-1">Employee Name <span class="text-red-500">*</span></label>
+                <input type="text" id="id_emp_name" name="emp_name" value="{{ emp.emp_name }}" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
+                                focus:border-custom-orange focus:ring-custom-orange transition duration-150">
+            </div>
+
+            <div class="flex flex-col">
+                <label for="id_emp_email" class="block text-sm font-medium text-gray-700 mb-1">Email Address <span class="text-red-500">*</span></label>
+                <input type="email" id="id_emp_email" name="emp_email" value="{{ emp.emp_email }}" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
+                                focus:border-custom-orange focus:ring-custom-orange transition duration-150">
+            </div>
+
+            <div class="flex flex-col">
+                <label for="id_emp_phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                <input type="text" id="id_emp_phone" name="emp_phone" value="{{ emp.emp_phone|default:'' }}"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
+                                focus:border-custom-orange focus:ring-custom-orange transition duration-150">
+            </div>
+
+            <div class="flex flex-col">
+                <label for="id_emp_dept" class="block text-sm font-medium text-gray-700 mb-1">Department <span class="text-red-500">*</span></label>
+                <input type="text" id="id_emp_dept" name="emp_dept" value="{{ emp.emp_dept }}" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
+                                focus:border-custom-orange focus:ring-custom-orange transition duration-150">
+            </div>
+
+            <div class="flex flex-col">
+                <label for="id_emp_unit" class="block text-sm font-medium text-gray-700 mb-1">Unit</label>
+                <input type="text" id="id_emp_unit" name="emp_unit" value="{{ emp.emp_unit|default:'' }}"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
+                                focus:border-custom-orange focus:ring-custom-orange transition duration-150">
+            </div>
+            
+            <div class="flex flex-col">
+                <label for="id_emp_designation" class="block text-sm font-medium text-gray-700 mb-1">Designation (Job Title) <span class="text-red-500">*</span></label>
+                <input type="text" id="id_emp_designation" name="emp_designation" value="{{ emp.emp_desgination }}" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
+                                focus:border-custom-orange focus:ring-custom-orange transition duration-150">
+            </div>
+            
+            <div class="flex flex-col">
+                <label for="id_emp_manager" class="block text-sm font-medium text-gray-700 mb-1">Manager Name</label>
+                <input type="text" id="id_emp_manager" name="emp_manager" value="{{ emp.emp_manager|default:'' }}"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
+                                focus:border-custom-orange focus:ring-custom-orange transition duration-150">
+            </div>
+
+            <div class="flex flex-col">
+                <label for="id_emp_status" class="block text-sm font-medium text-gray-700 mb-1">Status <span class="text-red-500">*</span></label>
+                <input type="text" id="id_emp_status" name="emp_status" value="{{ emp.emp_status }}" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
+                                focus:border-custom-orange focus:ring-custom-orange transition duration-150">
+            </div>
+            
+            <div class="flex flex-col">
+                <label for="id_emp_dob" class="block text-sm font-medium text-gray-700 mb-1">Date of Birth</label>
+                <input type="date" id="id_emp_dob" name="emp_dob" value="{{ emp.emp_dob|date:'Y-m-d'|default:'' }}"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
+                                focus:border-custom-orange focus:ring-custom-orange transition duration-150">
+            </div>
+
+            <div class="flex flex-col">
+                <label for="id_emp_doj" class="block text-sm font-medium text-gray-700 mb-1">Date of Joining <span class="text-red-500">*</span></label>
+                <input type="date" id="id_emp_doj" name="emp_doj" value="{{ emp.emp_doj|date:'Y-m-d' }}" required
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
+                                focus:border-custom-orange focus:ring-custom-orange transition duration-150">
+            </div>
+
+            <div class="flex flex-col">
+                <label for="id_emp_dor" class="block text-sm font-medium text-gray-700 mb-1">Date of Resignation (Optional)</label>
+                <input type="date" id="id_emp_dor" name="emp_dor" value="{{ emp.emp_dor|date:'Y-m-d'|default:'' }}"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
+                                focus:border-custom-orange focus:ring-custom-orange transition duration-150">
+            </div>
+            
+            <div class="hidden lg:block"></div> 
+            
+        </div>
+
+        <div class="mt-10 pt-6 border-t flex justify-end space-x-4">
+            
+            <button type="submit" class="flex items-center space-x-2 py-2.5 px-6 text-sm font-medium text-white bg-custom-orange rounded-lg shadow-md hover:bg-custom-orange-dark transition duration-150">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                <span>Update Employee</span>
+            </button>
+            
+            <a href="{% url 'home' %}" class="flex items-center space-x-2 py-2.5 px-6 text-sm font-medium text-white bg-gray-500 rounded-lg shadow-sm hover:bg-gray-600 transition duration-150">
+                <span>Cancel</span>
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
