@@ -1,19 +1,34 @@
 from django.db import models
+TICKET_ALLOCATED_PERSON = [
+  ('KRB','Ranjith'),
+  ('SSR','Saran'),
+  ('GSR','Gowri'),
+]
+
+TICKET_STATUS = [
+    ('P', 'Pending'),
+    ('I', 'Inprogress'),
+    ('A','Assigned'),
+    ('C', 'Completed'),
+    ('R', 'Reopen'),
+    # ('AD', 'Administrative'),
+]
 
 TICKET_CATEGORY_CHOICES = [
     ('HW', 'Hardware'),
     ('SW', 'Software'),
-    ('AD', 'Administrative'),
+    # ('AD', 'Administrative'),
 ]
 TICKET_PRIORITY_CHOICES = [
-    ('HW', 'Hardware'),
-    ('SW', 'Software'),
-    ('AD', 'Administrative'),
+    ('CR', 'Critical'),
+    ('HH', 'High'),
+    ('MD', 'Medium'),
+    ('LW', 'Low'),
 ]
 
 TICKET_TYPE_CHOICES = [
     ('DE','Defect'),   # any defect fixes
-    ('NE','New'),      # new development, Suggestions
+    ('NE','New Request'),      # new development, Suggestions
     ('TR','Training'), # Training
     ('DC','Data Correction'),
     ('TS', 'Hardware Support'), # hard ware
@@ -22,6 +37,12 @@ TICKET_TYPE_CHOICES = [
     ('BI', 'Billing Inquiry'),
     ('FE', 'Feature Request'),
     ('OT', 'Other'),
+    ('PF','Physical Failure'),
+    ('PD','Peripheral Devices'),
+    ('IN','Installation Setup'),
+    ('UP','Upgrade'),
+    ('CI','Connectivity Problem'),
+    ('DI','Diagnosis Inspection')
 ]
 # Create your models here.
 class Tickets(models.Model):
@@ -35,6 +56,14 @@ class Tickets(models.Model):
     tk_req_phone = models.CharField(max_length=20, blank=True, null=False ,verbose_name='Contact Phone',help_text='Optional contact number, including country code (e.g., +1 555-123-4567).')
     tk_req_email =models.EmailField(verbose_name='Contact Email (Optional)', blank=True, null=True)
     tk_subject = models.CharField(max_length=250)
-    tk_created_at = models.DateTimeField(auto_now_add=True, verbose_name='Creation Date')
+    tk_description = models.TextField(blank=True, null=True)
+
+    #edit ticket 
+    tk_status = models.CharField(max_length=2,choices=TICKET_STATUS,default='P',verbose_name='Ticket Status',null=True)
+    tk_assigned = models.CharField(max_length=3,choices=TICKET_ALLOCATED_PERSON,verbose_name='Ticket Assigned',null=True)
+    # time variables
+    tk_created_at = models.DateTimeField(auto_now_add=True, verbose_name='Creation Date') 
     tk_due_date = models.DateTimeField(verbose_name='Due Date', null=True, blank=True)
     tk_updated_at = models.DateTimeField(auto_now=True, verbose_name='Last Updated')
+
+

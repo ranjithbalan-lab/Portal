@@ -107,7 +107,7 @@
 
     <div class="flex min-h-screen">
         
-        <aside id="sidebar" class="w-64 bg-custom-orange text-white flex flex-col p-4 shadow-xl transition-all duration-300 ease-in-out">
+        <aside id="sidebar" class="w-16 sidebar-icon-mode bg-custom-orange text-white flex flex-col p-4 shadow-xl transition-all duration-300 ease-in-out">
             
             <h5 class="mb-4 mt-2 group relative">
                 <a class="text-white hover:text-gray-200 text-lg font-semibold flex items-center" href="{% url 'dashboard' %}">
@@ -240,5 +240,20 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebar = document.getElementById('sidebar');
+
+            // Ensure sidebar starts collapsed
+            sidebar.classList.add('w-16', 'sidebar-icon-mode');
+            sidebar.classList.remove('w-64');
+
+            // Hide all accordion sections
+            document.querySelectorAll('#sidebarAccordion > div > div').forEach(el => {
+                el.classList.add('hidden');
+            });
+        });
+    </script>
+
 </body>
 </html>

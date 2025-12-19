@@ -1,16 +1,11 @@
 {% extends "dashboard.html"%}
 
-{% block title %}Create New Support Ticket{% endblock %}
-
-{% block extra_head %}
-    {# Add any specific CSS or JS for the form here if needed #}
-{% endblock %}
+{% block title %}Submit New Support Ticket{% endblock %}
 
 {% block content %}
 <div class="w-full p-4 md:p-8 bg-white shadow-xl rounded-lg">
     
     <div class="flex items-center justify-between mb-8 border-b pb-4">
-        
         <a href="{% url 'tickets:home' %}" class="flex items-center space-x-1 py-2 px-4 text-sm font-medium text-white bg-gray-500 rounded-lg hover:bg-gray-600 transition duration-150">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg> 
             <span>Back to Ticket List</span>
@@ -24,120 +19,115 @@
         <div class="w-1/4"></div> 
     </div>
 
-    {# The form action targets the 'tickets:store' URL, consistent with your 'employee:store' #}
-    <form method="POST" action="#">
+    <form method="POST" action="{% url 'tickets:store' %}">
         {% csrf_token %}
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-           
+            {# TICKET CATEGORY #}
             <div class="flex flex-col">
                 <label for="id_tk_category" class="block text-sm font-medium text-gray-700 mb-1">Category <span class="text-red-500">*</span></label>
                 <select id="id_tk_category" name="tk_category" required
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
-                               focus:border-indigo-600 focus:ring-indigo-600 transition duration-150">
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-indigo-600 focus:ring-indigo-600 transition duration-150">
                     <option value="" disabled selected>Select Ticket Category</option>
-                    {# Populate with choices from your model's TICKET_CATEGORY_CHOICES #}
                     {% for value, label in TICKET_CATEGORY_CHOICES %}
                         <option value="{{ value }}">{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
 
+            {# TICKET TYPE #}
             <div class="flex flex-col">
                 <label for="id_tk_type" class="block text-sm font-medium text-gray-700 mb-1">Ticket Type <span class="text-red-500">*</span></label>
                 <select id="id_tk_type" name="tk_type" required
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
-                               focus:border-indigo-600 focus:ring-indigo-600 transition duration-150">
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-indigo-600 focus:ring-indigo-600 transition duration-150">
                     <option value="" disabled selected>Select Request Type</option>
-                    {# Populate with choices from your model's TICKET_TYPE_CHOICES #}
                     {% for value, label in TICKET_TYPE_CHOICES %}
                         <option value="{{ value }}">{{ label }}</option>
                     {% endfor %}
                 </select>
             </div>
 
+            {# TICKET PRIORITY #}
             <div class="flex flex-col">
                 <label for="id_tk_priority" class="block text-sm font-medium text-gray-700 mb-1">Priority <span class="text-red-500">*</span></label>
                 <select id="id_tk_priority" name="tk_priority" required
-                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
-                               focus:border-indigo-600 focus:ring-indigo-600 transition duration-150">
-                    <option value="" disabled selected>Select Priority Level</option>
-                    {# Populated based on the assumption you use standard priorities #}
-                    {# Adjust options if your model's TICKET_PRIORITY_CHOICES are different #}
-                    <option value="CR">Critical (Urgent production issue)</option>
-                    <option value="HI">High</option>
-                    <option value="ME">Medium</option>
-                    <option value="LO">Low</option>
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-indigo-600 focus:ring-indigo-600 transition duration-150">
+                    <option value="" disabled selected>Select Ticket Priority</option>
+                    {% for value, label in TICKET_PRIORITY_CHOICES %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
                 </select>
             </div>
 
+            {# REQUESTED BY #}
             <div class="flex flex-col">
-                <label for="id_tk_req_by" class="block text-sm font-medium text-gray-700 mb-1">Requested By (Your Name) <span class="text-red-500">*</span></label>
+                <label for="id_tk_req_by" class="block text-sm font-medium text-gray-700 mb-1">Requested By <span class="text-red-500">*</span></label>
                 <input type="text" id="id_tk_req_by" name="tk_req_by" required
-                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
-                              focus:border-indigo-600 focus:ring-indigo-600 transition duration-150">
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-indigo-600 focus:ring-indigo-600 transition duration-150"
+                       placeholder="e.g., John Doe">
             </div>
             
+            {# CONTACT PHONE #}
             <div class="flex flex-col">
-                <label for="id_tk_req_phone" class="block text-sm font-medium text-gray-700 mb-1">Contact Phone</label>
-                <input type="text" id="id_tk_req_phone" name="tk_req_phone"
-                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
-                              focus:border-indigo-600 focus:ring-indigo-600 transition duration-150"
+                <label for="id_tk_req_phone" class="block text-sm font-medium text-gray-700 mb-1">Contact Phone <span class="text-red-500">*</span></label>
+                <input type="text" id="id_tk_req_phone" name="tk_req_phone" required 
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-indigo-600 focus:ring-indigo-600 transition duration-150"
                        placeholder="e.g., +91 98765 43210">
             </div>
 
+            {# CONTACT EMAIL #}
             <div class="flex flex-col">
                 <label for="id_tk_req_email" class="block text-sm font-medium text-gray-700 mb-1">Contact Email (Optional)</label>
                 <input type="email" id="id_tk_req_email" name="tk_req_email"
-                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
-                              focus:border-indigo-600 focus:ring-indigo-600 transition duration-150">
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-indigo-600 focus:ring-indigo-600 transition duration-150"
+                       placeholder="john@example.com">
             </div>
 
+            {# SYSTEM/UNIT AFFECTED #}
             <div class="flex flex-col">
                 <label for="id_tk_unit" class="block text-sm font-medium text-gray-700 mb-1">System/Unit Affected</label>
                 <input type="text" id="id_tk_unit" name="tk_unit"
-                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
-                              focus:border-indigo-600 focus:ring-indigo-600 transition duration-150"
-                       placeholder="e.g., HR System, Laptop X, Server Y">
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-indigo-600 focus:ring-indigo-600 transition duration-150"
+                       placeholder="e.g., HR System">
             </div>
             
+            {# SPECIFIC MENU/MODULE #}
             <div class="flex flex-col">
-                <label for="id_tk_menu" class="block text-sm font-medium text-gray-700 mb-1">Specific Menu/Module (if applicable)</label>
+                <label for="id_tk_menu" class="block text-sm font-medium text-gray-700 mb-1">Specific Menu/Module</label>
                 <input type="text" id="id_tk_menu" name="tk_menu"
-                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
-                              focus:border-indigo-600 focus:ring-indigo-600 transition duration-150"
-                       placeholder="e.g., Payroll Module, User Setup Screen">
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-indigo-600 focus:ring-indigo-600 transition duration-150"
+                       placeholder="e.g., Payroll Screen">
             </div>
             
+            {# TARGET DUE DATE #}
             <div class="flex flex-col">
                 <label for="id_tk_due_date" class="block text-sm font-medium text-gray-700 mb-1">Target Due Date (Optional)</label>
                 <input type="date" id="id_tk_due_date" name="tk_due_date"
-                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
-                              focus:border-indigo-600 focus:ring-indigo-600 transition duration-150">
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-indigo-600 focus:ring-indigo-600 transition duration-150">
             </div>
-             <div class="lg:col-span-3">
-                <label for="id_tk_subject" class="block text-lg font-bold text-gray-800 mb-1">
+
+            {# SUBJECT / SHORT DESCRIPTION #}
+            <div class="flex flex-col lg:col-span-1">
+                <label for="id_tk_subject" class="block text-sm font-medium text-gray-800 mb-1">
                     Subject / Short Description <span class="text-red-500">*</span>
                 </label>
                 <input type="text" id="id_tk_subject" name="tk_subject" required
-                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-3 
-                              focus:border-indigo-600 focus:ring-indigo-600 transition duration-150 text-base"
-                       placeholder="e.g., VPN access broken, Printer not working, Feature suggestion for X report">
+                       class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-3 focus:border-indigo-600 focus:ring-indigo-600 transition duration-150 text-base"
+                       placeholder="e.g., VPN access broken">
+                <p class="mt-2 text-xs text-gray-500 italic">Summarize the issue in a few words.</p>
             </div>
 
-            <div class="md:col-span-2 lg:col-span-3">
-                <label for="id_tk_description" class="block text-sm font-medium text-gray-700 mb-1">Detailed Description of Issue/Request</label>
-                <textarea id="id_tk_description" name="tk_description" rows="6"
-                          class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 
-                                 focus:border-indigo-600 focus:ring-indigo-600 transition duration-150"
-                          placeholder="Please provide steps to reproduce the issue, error messages received, or detailed requirements for a new feature."></textarea>
+            {# DETAILED DESCRIPTION #}
+            <div class="flex flex-col lg:col-span-2">
+                <label for="id_tk_description" class="block text-sm font-medium text-gray-700 mb-1">
+                    Detailed Description of Issue/Request
+                </label>
+                <textarea id="id_tk_description" name="tk_description" rows="5"
+                        class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2.5 focus:border-indigo-600 focus:ring-indigo-600 transition duration-150"
+                        placeholder="Provide steps to reproduce the issue..."></textarea>
             </div>
-
-        </div>
-
-        <div class="mt-10 pt-6 border-t flex justify-end space-x-4">
-            
+        </div> <div class="mt-10 pt-6 border-t flex justify-end space-x-4">
             <button type="submit" class="flex items-center space-x-2 py-2.5 px-6 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 transition duration-150">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
                 <span>Submit Ticket</span>
@@ -149,13 +139,4 @@
         </div>
     </form>
 </div>
-
-{# NOTE: These constants need to be passed from the view if you are not using a Django Form class. #}
-{# If you are using a Django Form, replace the fields with {{ form.as_p }} or similar. #}
-<script>
-    // This part is for demonstration. In a real Django setup, you would use a Form.
-    // However, if you are not using Forms, you need to manually fetch your choices
-    // in the Django view and pass them to the context (e.g., TICKET_CATEGORY_CHOICES).
-    // Make sure 'tk_description' is mapped to a field if you want to save it.
-</script>
 {% endblock %}
