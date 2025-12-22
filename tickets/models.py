@@ -73,7 +73,7 @@ class Tickets(models.Model):
     tk_incident_dt = models.DateField(verbose_name='Incident date',null=True,blank=True)
     tk_scrn_id = models.CharField(max_length=50,null=True,blank=True)
     tk_root_cause =models.CharField(max_length=255,null=True,blank=True)
-
+    tk_attachment =models.FileField(upload_to='attachments/',null=True,blank=True)
     # Roadmap ticket 
     tk_rm_id = models.CharField(max_length=15,null=True,blank=True)
     tk_rm_dt = models.DateField(max_length=15,null=True,blank=True)

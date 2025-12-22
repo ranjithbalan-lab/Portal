@@ -39,8 +39,7 @@ def create(request):
 
 def store(request):
     if request.method == 'POST':
-        # 1. Extract data from the POST request
-        # Note: If using a Django ModelForm, this is much simpler.
+        # 1. Extract text data from the POST request
         tk_category = request.POST.get('tk_category')
         tk_type = request.POST.get('tk_type')
         tk_priority = request.POST.get('tk_priority')
@@ -49,12 +48,25 @@ def store(request):
         tk_req_email = request.POST.get('tk_req_email')
         tk_unit = request.POST.get('tk_unit')
         tk_menu = request.POST.get('tk_menu')
-        tk_due_date = request.POST.get('tk_due_date') or None # Handle empty date
         tk_subject = request.POST.get('tk_subject')
         tk_description = request.POST.get('tk_description')
 
+        # 2. Extract FILE data (Crucial for viewing later)
+        # request.FILES handles the actual binary upload of the pic/doc
+        tk_attachment = request.FILES.get('tk_attachment')
+
+        # 3. Handle the Due Date (Convert string to aware datetime)
+        due_date_str = request.POST.get('tk_due_date')
+        tk_due_date = None
+        if due_date_str:
+            try:
+                naive_date = datetime.strptime(due_date_str, '%Y-%m-%d')
+                tk_due_date = timezone.make_aware(naive_date)
+            except ValueError:
+                tk_due_date = None
+
         try:
-            # 2. Create the Ticket instance
+            # 4. Create the Ticket instance in the database
             Tickets.objects.create(
                 tk_category=tk_category,
                 tk_type=tk_type,
@@ -67,19 +79,18 @@ def store(request):
                 tk_due_date=tk_due_date,
                 tk_subject=tk_subject,
                 tk_description=tk_description,
-                # status='Open' # Assuming you have a default status
+                tk_attachment=tk_attachment,  # Saves the path to SQLite and file to /media/
+                tk_status='P'                 # Default to 'Pending'
             )
             
-            # 3. Add success message
-            messages.success(request, "Ticket submitted successfully!")
+            messages.success(request, "Ticket submitted successfully with attachment!")
             return redirect('tickets:home')
 
         except Exception as e:
-            # Handle potential errors (e.g., database issues)
             messages.error(request, f"Error submitting ticket: {e}")
-            return redirect('tickets:create') # Redirect back to form
+            return redirect('tickets:create')
 
-    # If the request is GET, just redirect to the creation page
+    # If GET request, send back to the form
     return redirect('tickets:index')
 
 def edit(request, id):
@@ -117,10 +128,6 @@ def update(request, id):
             # 2. Map dropdowns correctly
             ticket.tk_status = request.POST.get('tk_status')          # Matches 'P'
             ticket.tk_assigned = request.POST.get('tk_assigned_to')  # Matches 'KRB'
-
-            ticket.tk_root_cause = request.POST.get('tk_root_cause')
-            ticket.tk_preventive_action = request.POST.get('tk_preventive_action')
-            ticket.tk_corrective_action = request.POST.get('tk_corrective_action')
 
             # 3. FIX: Convert the date string to a timezone-aware object
             due_date_str = request.POST.get('tk_due_date')
