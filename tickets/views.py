@@ -3,7 +3,8 @@ from django.shortcuts import render, redirect,get_object_or_404
 from .models import Tickets 
 from django.contrib import messages
 from django.urls import reverse
-
+from django.utils import timezone
+from datetime import datetime
 from .models import TICKET_CATEGORY_CHOICES, TICKET_TYPE_CHOICES, TICKET_PRIORITY_CHOICES,TICKET_STATUS,TICKET_ALLOCATED_PERSON 
 
 def index(request):
@@ -99,11 +100,10 @@ def edit(request, id):
 
 def update(request, id):
     if request.method == 'POST':
-        # 1. Fetch the existing record
         ticket = get_object_or_404(Tickets, tk_id=id)
         
         try:
-            # 2. Update the fields with the new data from the form
+            # 1. Update basic text fields
             ticket.tk_category = request.POST.get('tk_category')
             ticket.tk_type = request.POST.get('tk_type')
             ticket.tk_priority = request.POST.get('tk_priority')
@@ -111,23 +111,36 @@ def update(request, id):
             ticket.tk_req_phone = request.POST.get('tk_req_phone')
             ticket.tk_req_email = request.POST.get('tk_req_email')
             ticket.tk_unit = request.POST.get('tk_unit')
-            ticket.tk_menu = request.POST.get('tk_menu')
             ticket.tk_subject = request.POST.get('tk_subject')
             ticket.tk_description = request.POST.get('tk_description')
             
-            # Handle the date separately to avoid formatting errors
-            due_date = request.POST.get('tk_due_date')
-            ticket.tk_due_date = due_date if due_date else None
+            # 2. Map dropdowns correctly
+            ticket.tk_status = request.POST.get('tk_status')          # Matches 'P'
+            ticket.tk_assigned = request.POST.get('tk_assigned_to')  # Matches 'KRB'
 
-            # 3. Commit changes to the database
+            ticket.tk_root_cause = request.POST.get('tk_root_cause')
+            ticket.tk_preventive_action = request.POST.get('tk_preventive_action')
+            ticket.tk_corrective_action = request.POST.get('tk_corrective_action')
+
+            # 3. FIX: Convert the date string to a timezone-aware object
+            due_date_str = request.POST.get('tk_due_date')
+            if due_date_str:
+                # Convert "2025-12-19" to a datetime object
+                naive_date = datetime.strptime(due_date_str, '%Y-%m-%d')
+                # Make it aware to satisfy Django's USE_TZ = True
+                ticket.tk_due_date = timezone.make_aware(naive_date)
+            else:
+                ticket.tk_due_date = None
+
+            # 4. Save
             ticket.save()
             
-            messages.success(request, f"Ticket #{id} has been updated successfully.")
-            return redirect('tickets:home')
+            messages.success(request, f"Ticket #{id} updated successfully.")
+            return redirect('tickets:home') # This should now go to list view
 
         except Exception as e:
-            messages.error(request, f"Update failed: {e}")
+            # This is why you are seeing the edit page again
+            messages.error(request, f"Update failed: {str(e)}")
             return redirect('tickets:edit', id=id)
 
-    # If someone tries to access this via GET, send them back to the list
     return redirect('tickets:home')

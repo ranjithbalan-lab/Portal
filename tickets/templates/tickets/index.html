@@ -25,67 +25,55 @@
         </a>
     </div>
 
-    <div class="overflow-x-auto shadow-lg rounded-lg">
+    <div class="overflow-x-auto shadow-md rounded-lg">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-800 text-white">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">ID</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Subject</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Category</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Priority</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Requested By</th>
-                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Created At</th>
-                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider">Actions</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase">ID</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase">Unit</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase">Raised by</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase">Raised On</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase">Subject</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase">Priority</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase">Assigned To</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium uppercase">Last Updated At</th>
+                    <th class="px-6 py-3 text-center text-xs font-medium uppercase">Actions</th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-                
                 {% for ticket in tickets %}
-                <tr class="hover:bg-gray-50">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">TK-{{ ticket.tk_id }}</td>
-                    <td class="px-6 py-4 text-sm text-gray-900 max-w-xs truncate">{{ ticket.tk_subject }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ ticket.get_tk_category_display }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm">
-                        {# Display Priority with color based on value (Placeholder logic) #}
-                        {% if ticket.tk_priority == 'AD' %}
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">High</span>
-                        {% elif ticket.tk_priority == 'HW' %}
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Medium</span>
+                <tr>
+                    <td class="px-6 py-4 text-sm font-bold">TK-{{ ticket.tk_id }}</td>
+                    <td class="px-6 py-4 text-sm">{{ticket.tk_unit}}</td>
+                    <td class="px-6 py-4 text-sm">{{ticket.tk_req_by}}</td>
+                    <td class="px-6 py-4 text-sm">{{ ticket.tk_created_at }}</td>
+                    <td class="px-6 py-4 text-sm">{{ ticket.tk_subject|truncatechars:30 }}</td>
+                    <td class="px-6 py-4 text-sm">
+                        <span class="px-2 py-1 rounded-full text-xs font-semibold 
+                            {% if ticket.tk_status == 'C' %}bg-green-100 text-green-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+                            {{ ticket.get_tk_status_display }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm">
+                        {% if ticket.tk_priority == 'CR' %}
+                            <span class="px-2 bg-red-100 text-red-800 rounded-full text-xs font-bold">Critical</span>
                         {% else %}
-                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Low</span>
+                            <span class="px-2 bg-gray-100 text-gray-800 rounded-full text-xs">{{ ticket.get_tk_priority_display }}</span>
                         {% endif %}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ ticket.tk_req_by }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ ticket.tk_created_at|date:"M d, Y H:i" }}</td>
-                    
-                    <td class="px-6 py-4 text-center">
-                        <div class="flex justify-center gap-2">
-                            {# Assuming you will create views for 'tickets:edit' and 'tickets:delete' later #}
-                            <a href="{% url 'tickets:edit' ticket.pk %}"
-
-                            class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 text-xs">
-                                View/Edit
-                            </a>
-
-                            <form method="POST" action="#" class="inline">
-                                {% csrf_token %}
-                                <button type="submit"
-                                        onclick="return confirm('Are you sure you want to delete this ticket?')"
-                                        class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-xs">
-                                    Delete
-                                </button>
-                            </form>
-                        </div>
+                    <td class="px-6 py-4 text-sm">
+                        <span class="px-2 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-medium">
+                            {{ ticket.get_tk_assigned_display|default:"Unassigned" }}
+                        </span>
                     </td>
-
-
+                    <td class="px-6 py-4 text-sm">{{ ticket.tk_updated_at }}</td>
+                    <td class="px-6 py-4 text-center">
+                        <a href="{% url 'tickets:edit' ticket.pk %}" class="text-blue-600 hover:underline text-sm font-medium">Edit</a>
+                    </td>
                 </tr>
                 {% empty %}
-                <tr>
-                    <td colspan="7" class="px-3 py-5 text-center text-gray-500 bg-gray-50">
-                        <h4 class="text-lg font-semibold">No active tickets found!</h4>
-                    </td>
-                </tr>
+                <tr><td colspan="6" class="p-10 text-center text-gray-500">No tickets found.</td></tr>
                 {% endfor %}
             </tbody>
         </table>

@@ -1,4 +1,15 @@
 from django.db import models
+
+ERROR_TYPE={
+    ("BE","Backend"), 
+    ("FE","Frontend"), 
+    ("RP","Repeated"),
+    ("IH","Inhouse"), 
+    ("NR","New Report"), 
+    ("TR","Training"), 
+    ("DC","Data Correction") 
+}
+
 TICKET_ALLOCATED_PERSON = [
   ('KRB','Ranjith'),
   ('SSR','Saran'),
@@ -19,6 +30,7 @@ TICKET_CATEGORY_CHOICES = [
     ('SW', 'Software'),
     # ('AD', 'Administrative'),
 ]
+
 TICKET_PRIORITY_CHOICES = [
     ('CR', 'Critical'),
     ('HH', 'High'),
@@ -48,22 +60,33 @@ TICKET_TYPE_CHOICES = [
 class Tickets(models.Model):
     tk_id = models.AutoField(primary_key=True)
     tk_unit = models.CharField(max_length=15)
+    tk_dept = models.CharField(max_length=30,verbose_name='Department',null=True)
     tk_category = models.CharField(max_length=2,choices=TICKET_CATEGORY_CHOICES,verbose_name='Ticket Category')
     tk_type = models.CharField(max_length=2,choices=TICKET_TYPE_CHOICES,verbose_name='Ticket Type')
     tk_priority = models.CharField(max_length=2,choices=TICKET_PRIORITY_CHOICES,verbose_name='Ticket Priority')
     tk_menu = models.CharField(max_length=25)
-    tk_req_by = models.CharField(max_length=150)
+    tk_req_by = models.CharField(max_length=150) #name of the ticket raiser 
     tk_req_phone = models.CharField(max_length=20, blank=True, null=False ,verbose_name='Contact Phone',help_text='Optional contact number, including country code (e.g., +1 555-123-4567).')
     tk_req_email =models.EmailField(verbose_name='Contact Email (Optional)', blank=True, null=True)
     tk_subject = models.CharField(max_length=250)
     tk_description = models.TextField(blank=True, null=True)
+    tk_incident_dt = models.DateField(verbose_name='Incident date',null=True,blank=True)
+    tk_scrn_id = models.CharField(max_length=50,null=True,blank=True)
+    tk_root_cause =models.CharField(max_length=255,null=True,blank=True)
+
+    # Roadmap ticket 
+    tk_rm_id = models.CharField(max_length=15,null=True,blank=True)
+    tk_rm_dt = models.DateField(max_length=15,null=True,blank=True)
+    tk_rm_assigned = models.CharField(max_length=50,null=True,blank=True)
+    tk_rm_status = models.CharField(max_length=2,choices=TICKET_STATUS,default='P',verbose_name='Ticket Status',null=True)
+    tk_err_class = models.CharField(max_length=2,choices=ERROR_TYPE,verbose_name='Error Classification',null=True,blank=True)
+    tk_corrective_action = models.TextField(blank=True, null=True)
+    tk_preventive_action = models.TextField(blank=True, null=True)
 
     #edit ticket 
     tk_status = models.CharField(max_length=2,choices=TICKET_STATUS,default='P',verbose_name='Ticket Status',null=True)
-    tk_assigned = models.CharField(max_length=3,choices=TICKET_ALLOCATED_PERSON,verbose_name='Ticket Assigned',null=True)
+    tk_assigned = models.CharField(max_length=3,choices=TICKET_ALLOCATED_PERSON,verbose_name='Ticket Assigned',null=True)  # ticket handeled by
     # time variables
     tk_created_at = models.DateTimeField(auto_now_add=True, verbose_name='Creation Date') 
     tk_due_date = models.DateTimeField(verbose_name='Due Date', null=True, blank=True)
     tk_updated_at = models.DateTimeField(auto_now=True, verbose_name='Last Updated')
-
-
